@@ -2,7 +2,10 @@
   <div>
     <div v-for="(card, i) in cards"
          :key="i"
-         class="card">{{ card }}</div>
+         class="card"
+         @click="press(i)" >
+      {{ card[0] ? card[1] : '--' }}
+    </div>
     <button>Try again</button>
   </div>
 
@@ -24,8 +27,13 @@ export default {
   },
   mounted() {
     for (let i = 0; i < this.size; i++) {
-      this.cards.push(i + 1, i + 1);
+      this.cards.push([ 1, i + 1 ], [ 1, i + 1 ]);
     }
+  },
+  methods: {
+    press(i) {
+      this.$set(this.cards[i], 0, !this.cards[i][0]);
+    },
   },
 };
 </script>

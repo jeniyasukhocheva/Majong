@@ -15,9 +15,10 @@ export default {
   name: 'Game',
   data() {
     return {
-      N:     2,
-      M:     2,
-      cards: [],
+      N:         2,
+      M:         2,
+      cards:     [],
+      openCards: 0,
     };
   },
   computed: {
@@ -29,10 +30,29 @@ export default {
     for (let i = 0; i < this.size; i++) {
       this.cards.push([ 1, i + 1 ], [ 1, i + 1 ]);
     }
+    setTimeout(this.hideAll, 3000);
   },
   methods: {
     press(i) {
-      this.$set(this.cards[i], 0, !this.cards[i][0]);
+      if (this.openCards === 0) {
+        this.showCard(i);
+        this.openCards++;
+      } else {
+        this.showCard(i);
+        setTimeout(this.hideAll, 1000);
+        this.openCards = 0;
+      }
+    },
+    hideCard(i) {
+      this.$set(this.cards[i], 0, 0);
+    },
+    showCard(i) {
+      this.$set(this.cards[i], 0, 1);
+    },
+    hideAll() {
+      for (let i = 0; i < this.size * 2; i++) {
+        this.hideCard(i);
+      }
     },
   },
 };

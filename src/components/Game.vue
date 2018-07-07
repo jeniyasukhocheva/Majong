@@ -2,6 +2,7 @@
   <div>
     <div v-for="(card, i) in cards"
          :key="i"
+         :class="{'guessed': card.isGuessed}"
          class="card"
          @click="press(i)" >
       {{ card.isOpen || card.isGuessed ? card.content : '--' }}
@@ -19,11 +20,23 @@ export default {
       M:         2,
       cards:     [],
       openCards: [],
+      tries:     0,
     };
   },
   computed: {
     size() {
       return Math.floor((this.N * this.M) / 2);
+    },
+    guessedCards() {
+      let counter = 0;
+
+      for (let j = 0; j < this.cards.length; j++) {
+        if (this.cards[j].isGuessed) {
+          counter++;
+        }
+      }
+
+      return counter;
     },
   },
   mounted() {
@@ -42,6 +55,7 @@ export default {
     press(i) {
       if (this.openCards.length === 0) {
         this.showCard(i);
+        this.tries++;
 
         return;
       }
@@ -55,6 +69,9 @@ export default {
           this.cards[this.openCards[1]].content) {
           this.cards[this.openCards[0]].isGuessed = true;
           this.cards[this.openCards[1]].isGuessed = true;
+          if (this.guessedCards === this.size * 2) {
+            this.$router.push({ name: 'Finish', params: { tries: this.tries } });
+          }
         }
         setTimeout(this.hideAll, 1000);
       }
@@ -90,5 +107,8 @@ export default {
     border: 1px solid black;
     background-color: green;
     display: table-cell;
+  }
+  .guessed {
+    border: 2px solid red;
   }
 </style>

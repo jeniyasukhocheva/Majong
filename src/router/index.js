@@ -22,6 +22,7 @@ export default new Router({
       path:      '/finish',
       name:      'Finish',
       component: Finish,
+      props:     true,
     },
   ],
 });

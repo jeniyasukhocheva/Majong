@@ -4,7 +4,7 @@
          :key="i"
          class="card"
          @click="press(i)" >
-      {{ card.isOpen ? card.content : '--' }}
+      {{ card.isOpen || card.isGuessed ? card.content : '--' }}
     </div>
     <button>Try again</button>
   </div>
@@ -15,10 +15,10 @@ export default {
   name: 'Game',
   data() {
     return {
-      N:         2,
+      N:         3,
       M:         2,
       cards:     [],
-      openCards: 0,
+      openCards: [],
     };
   },
   computed: {
@@ -29,8 +29,9 @@ export default {
   mounted() {
     for (let i = 0; i < this.size; i++) {
       const card = {
-        isOpen:  true,
-        content: i + 1,
+        isOpen:    true,
+        content:   i + 1,
+        isGuessed: false,
       };
 
       this.cards.push({ ...card }, { ...card });
@@ -39,17 +40,22 @@ export default {
   },
   methods: {
     press(i) {
-      if (this.openCards === 0) {
+      if (this.openCards.length === 0) {
         this.showCard(i);
 
         return;
       }
 
-      if (this.openCards === 1) {
+      if (this.openCards.length === 1) {
         if (this.cards[i].isOpen) {
           return;
         }
         this.showCard(i);
+        if (this.cards[this.openCards[0]].content ===
+          this.cards[this.openCards[1]].content) {
+          this.cards[this.openCards[0]].isGuessed = true;
+          this.cards[this.openCards[1]].isGuessed = true;
+        }
         setTimeout(this.hideAll, 1000);
       }
     },
@@ -58,13 +64,13 @@ export default {
     },
     showCard(i) {
       this.$set(this.cards[i], 'isOpen', true);
-      this.openCards++;
+      this.openCards.push(i);
     },
     hideAll() {
       for (let i = 0; i < this.size * 2; i++) {
         this.hideCard(i);
       }
-      this.openCards = 0;
+      this.openCards = [];
     },
   },
 };

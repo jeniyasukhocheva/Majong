@@ -7,7 +7,7 @@
          @click="press(i)" >
       {{ card.isOpen || card.isGuessed ? card.content : '--' }}
     </div>
-    <button>Try again</button>
+    <button @click="startGame()">Try again</button>
   </div>
 
 </template>
@@ -40,18 +40,24 @@ export default {
     },
   },
   mounted() {
-    for (let i = 0; i < this.size; i++) {
-      const card = {
-        isOpen:    true,
-        content:   i + 1,
-        isGuessed: false,
-      };
-
-      this.cards.push({ ...card }, { ...card });
-    }
-    setTimeout(this.hideAll, 3000);
+    this.startGame();
   },
   methods: {
+    startGame() {
+      this.openCards = 0;
+      this.cards = [];
+      this.tries = 0;
+      for (let i = 0; i < this.size; i++) {
+        const card = {
+          isOpen:    true,
+          content:   i + 1,
+          isGuessed: false,
+        };
+
+        this.cards.push({ ...card }, { ...card });
+      }
+      setTimeout(this.hideAll, 3000);
+    },
     press(i) {
       if (this.openCards.length === 0) {
         this.showCard(i);

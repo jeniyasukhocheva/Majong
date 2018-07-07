@@ -37,10 +37,14 @@ export default {
       if (this.openCards === 0) {
         this.showCard(i);
         this.openCards++;
-      } else {
+
+        return;
+      }
+
+      if (this.openCards === 1) {
         this.showCard(i);
+        this.openCards++;
         setTimeout(this.hideAll, 1000);
-        this.openCards = 0;
       }
     },
     hideCard(i) {
@@ -53,6 +57,7 @@ export default {
       for (let i = 0; i < this.size * 2; i++) {
         this.hideCard(i);
       }
+      this.openCards = 0;
     },
   },
 };

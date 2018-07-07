@@ -36,14 +36,15 @@ export default {
     press(i) {
       if (this.openCards === 0) {
         this.showCard(i);
-        this.openCards++;
 
         return;
       }
 
       if (this.openCards === 1) {
+        if (this.cards[i][0] !== 0) {
+          return;
+        }
         this.showCard(i);
-        this.openCards++;
         setTimeout(this.hideAll, 1000);
       }
     },
@@ -52,6 +53,7 @@ export default {
     },
     showCard(i) {
       this.$set(this.cards[i], 0, 1);
+      this.openCards++;
     },
     hideAll() {
       for (let i = 0; i < this.size * 2; i++) {

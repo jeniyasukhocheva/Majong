@@ -4,7 +4,7 @@
          :key="i"
          class="card"
          @click="press(i)" >
-      {{ card[0] ? card[1] : '--' }}
+      {{ card.isOpen ? card.content : '--' }}
     </div>
     <button>Try again</button>
   </div>
@@ -28,7 +28,12 @@ export default {
   },
   mounted() {
     for (let i = 0; i < this.size; i++) {
-      this.cards.push([ 1, i + 1 ], [ 1, i + 1 ]);
+      const card = {
+        isOpen:  true,
+        content: i + 1,
+      };
+
+      this.cards.push({ ...card }, { ...card });
     }
     setTimeout(this.hideAll, 3000);
   },
@@ -41,7 +46,7 @@ export default {
       }
 
       if (this.openCards === 1) {
-        if (this.cards[i][0] !== 0) {
+        if (this.cards[i].isOpen) {
           return;
         }
         this.showCard(i);
@@ -49,10 +54,10 @@ export default {
       }
     },
     hideCard(i) {
-      this.$set(this.cards[i], 0, 0);
+      this.$set(this.cards[i], 'isOpen', false);
     },
     showCard(i) {
-      this.$set(this.cards[i], 0, 1);
+      this.$set(this.cards[i], 'isOpen', true);
       this.openCards++;
     },
     hideAll() {

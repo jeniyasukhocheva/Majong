@@ -12,6 +12,8 @@
 
 </template>
 <script>
+import shuffle from '../utils';
+
 export default {
   name: 'Game',
   data() {
@@ -56,6 +58,7 @@ export default {
 
         this.cards.push({ ...card }, { ...card });
       }
+      this.cards = shuffle(this.cards);
       setTimeout(this.hideAll, 3000);
     },
     press(i) {

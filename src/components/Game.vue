@@ -1,11 +1,15 @@
 <template>
-  <div>
-    <div v-for="(card, i) in cards"
+  <div class="container">
+    <div v-for="(line, i) in lines"
          :key="i"
-         :class="{'guessed': card.isGuessed}"
-         class="card"
-         @click="press(i)" >
-      {{ card.isOpen || card.isGuessed ? card.content : '--' }}
+         class="line">
+      <div v-for="(card, j) in line"
+           :key="j"
+           :class="{'guessed': card.isGuessed}"
+           class="card"
+           @click="press((i * colCount) + j)" >
+        {{ card.isOpen || card.isGuessed ? card.content : '--' }}
+      </div>
     </div>
     <button @click="startGame()">Try again</button>
   </div>
@@ -18,8 +22,8 @@ export default {
   name: 'Game',
   data() {
     return {
-      N:         3,
-      M:         2,
+      rowsCount: 4,
+      colCount:  4,
       cards:     [],
       openCards: [],
       tries:     0,
@@ -27,7 +31,7 @@ export default {
   },
   computed: {
     size() {
-      return Math.floor((this.N * this.M) / 2);
+      return Math.floor((this.rowsCount * this.colCount) / 2);
     },
     guessedCards() {
       let counter = 0;
@@ -40,8 +44,24 @@ export default {
 
       return counter;
     },
+    lines() {
+      const matr = [];
+      let k = 0;
+
+      for (let row = 0; row < this.rowsCount; row++) {
+        const line = [];
+
+        for (let col = 0; col < this.colCount; col++) {
+          line.push(this.cards[k]);
+          k++;
+        }
+        matr.push(line);
+      }
+
+      return matr;
+    },
   },
-  mounted() {
+  created() {
     this.startGame();
   },
   methods: {
@@ -59,7 +79,7 @@ export default {
         this.cards.push({ ...card }, { ...card });
       }
       this.cards = shuffle(this.cards);
-      setTimeout(this.hideAll, 3000);
+      setTimeout(this.hideAll, 500);
     },
     press(i) {
       if (this.openCards.length === 0) {
@@ -103,9 +123,14 @@ export default {
 </script>
 
 <style scoped>
-
-
+  .line {
+    width: 100%;
+    float: none;
+    border: 2px solid black;
+    display: flex;
+  }
   .card {
+    flex: 1;
     margin: 10px;
     padding: 10px;
     width: 50px;

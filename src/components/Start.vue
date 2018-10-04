@@ -1,6 +1,14 @@
 <template>
-  <div>
-    <button @click="startGame">Press here to start!</button>
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">
+        <h1 class="text-center">Welcome to the game!</h1>
+        <hr>
+        <h4>Press to start a game!</h4>
+        <button class="btn btn-primary btn-lg"
+                @click="startGame">Start!</button>
+      </div>
+    </div>
   </div>
 </template>
 

@@ -1,29 +1,39 @@
 <template>
   <div class="container">
-    <div v-for="(line, i) in lines"
-         :key="i"
-         class="line">
-      <div v-for="(card, j) in line"
-           :key="j"
-           :class="{'guessed': card.isGuessed}"
-           class="card"
-           @click="press((i * colCount) + j)" >
-        {{ card.isOpen || card.isGuessed ? card.content : '--' }}
+    <div class="row">
+      <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">
+        <h1 class="text-center">Pick same cards!</h1>
+        <hr>
+        <div v-for="(line, i) in lines"
+             :key="i"
+             class="line">
+          <div v-for="(card, j) in line"
+               :key="j"
+               :class="{'guessed': card.isGuessed}"
+               class="card"
+               @click="press((i * colCount) + j)" >
+            <img v-if="card.isOpen || card.isGuessed"
+                 :src="card.content"
+                 class="pic">
+          </div>
+        </div>
+        <button class="btn btn-outline-primary btn-lg btn-block"
+                @click="startGame()">Try again</button>
       </div>
     </div>
-    <button @click="startGame()">Try again</button>
   </div>
 
 </template>
 <script>
 import shuffle from '../utils';
+import randomPics from '../images';
 
 export default {
   name: 'Game',
   data() {
     return {
       rowsCount: 4,
-      colCount:  4,
+      colCount:  6,
       cards:     [],
       openCards: [],
       tries:     0,
@@ -69,17 +79,21 @@ export default {
       this.openCards = 0;
       this.cards = [];
       this.tries = 0;
+
+      const pics = randomPics(this.size);
+
       for (let i = 0; i < this.size; i++) {
         const card = {
           isOpen:    true,
-          content:   i + 1,
+          /* eslint-disable-next-line */
+          content:   require(`../assets/images/${pics[i]}`),
           isGuessed: false,
         };
 
         this.cards.push({ ...card }, { ...card });
       }
       this.cards = shuffle(this.cards);
-      setTimeout(this.hideAll, 500);
+      setTimeout(this.hideAll, 1000);
     },
     press(i) {
       if (this.openCards.length === 0) {
@@ -102,7 +116,7 @@ export default {
             this.$router.push({ name: 'Finish', params: { tries: this.tries } });
           }
         }
-        setTimeout(this.hideAll, 1000);
+        setTimeout(this.hideAll, 500);
       }
     },
     hideCard(i) {
@@ -123,26 +137,31 @@ export default {
 </script>
 
 <style scoped>
+  .pic {
+    height: 100%;
+  }
+
   .line {
-    width: 100%;
+    justify-content: center;
     float: none;
-    border: 2px solid black;
     display: flex;
+
+
   }
   .card {
-    flex: 1;
     margin: 10px;
     padding: 10px;
-    width: 50px;
-    height: 50px;
+    width: 75px;
+    height: 75px;
     vertical-align: middle;
     text-align: center;
-    float: left;
     border: 1px solid black;
-    background-color: green;
     display: table-cell;
   }
   .guessed {
     border: 2px solid red;
+  }
+  .btn{
+    margin: auto;
   }
 </style>

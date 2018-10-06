@@ -7,29 +7,31 @@
         <div v-for="(line, i) in lines"
              :key="i"
              class="line">
-          <div v-for="(card, j) in line"
-               :key="j"
-               :class="{'guessed': card.isGuessed}"
-               class="card"
-               @click="press((i * colCount) + j)" >
-            <img v-if="card.isOpen || card.isGuessed"
-                 :src="card.content"
-                 class="pic">
-          </div>
+          <app-card v-for="(card, j) in line"
+                    :key="j"
+                    :is-guessed="card.isGuessed"
+                    :is-open="card.isOpen"
+                    :image="card.content"
+                    @click="press((i * colCount) + j)"/>
         </div>
-        <button class="btn btn-outline-primary btn-lg btn-block"
-                @click="startGame()">Try again</button>
       </div>
+      <button class="btn btn-outline-primary btn-lg btn-block"
+              @click="startGame()">Try again</button>
     </div>
   </div>
+
 
 </template>
 <script>
 import shuffle from '../utils';
 import randomPics from '../images';
+import Card from './Card';
 
 export default {
-  name: 'Game',
+  name:       'Game',
+  components: {
+    'app-card': Card,
+  },
   data() {
     return {
       rowsCount: 4,
@@ -137,29 +139,10 @@ export default {
 </script>
 
 <style scoped>
-  .pic {
-    height: 100%;
-  }
-
   .line {
     justify-content: center;
     float: none;
     display: flex;
-
-
-  }
-  .card {
-    margin: 10px;
-    padding: 10px;
-    width: 75px;
-    height: 75px;
-    vertical-align: middle;
-    text-align: center;
-    border: 1px solid black;
-    display: table-cell;
-  }
-  .guessed {
-    border: 2px solid red;
   }
   .btn{
     margin: auto;
